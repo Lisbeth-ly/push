@@ -1,0 +1,63 @@
+创建角色：
+db.createRole({role:'root',roles:[],
+privileges:[
+{resource:{anyResource:true},actions:['anyAction']}
+]})
+
+
+创建管理用户：
+use admin 
+db.createUser( { user: "root", pwd: "qn7XrrXRDtR6QBv82xqMi", roles: [ { role: "root", db: "admin" } ] } );
+
+> cfg={ _id:"ft", members:[ {_id:0,host:'10.10.108.33:27017',priority:2}, {_id:1,host:'10.10.108.34:27017',priority:1},{_id:2,host:'10.10.108.36:27017',arbiterOnly:true}] };
+{
+	"_id" : "ft",
+	"members" : [
+		{
+			"_id" : 0,
+			"host" : "10.10.108.33:27017",
+			"priority" : 2
+		},
+		{
+			"_id" : 1,
+			"host" : "10.10.108.34:27017",
+			"priority" : 1
+		},
+		{
+			"_id" : 2,
+			"host" : "10.10.108.36:27017",
+			"arbiterOnly" : true
+		}
+	]
+}
+> rs.initiate(cfg)
+{
+	"ok" : 0,
+	"errmsg" : "not authorized on admin to execute command { replSetInitiate: { _id: \"ft0\", members: [ { _id: 0.0, host: \"10.10.108.33:27017\", priority: 2.0 }, { _id: 1.0, host: \"10.10.108.34:27017\", priority: 1.0 }, { _id: 2.0, host: \"10.10.108.36:27017\", arbiterOnly: true } ] } }",
+	"code" : 13,
+	"codeName" : "Unauthorized"
+}
+>db.createUser({user:'root',pwd:'qn7XrrXRDtR6QBv82xqMi',roles:[{ "role" : "root", "db" : "admin" }]});
+
+db.auth('root','qn7XrrXRDtR6QBv82xqMi')
+
+
+
+初始化复制集：（集合为："ft" ；第一个成员为："host-10-10-108-33:27017"
+rs.initiate({_id: "ft",members: [{ _id: 0 , host: "host-10-10-108-33:27017" },{_id: "ft",members: [{ _id: 1 , host: "host-10-10-108-34:27017" },{_id: "ft",members: [{ _id: 2 , host: "host-10-10-108-36:27017" }]})
+> rs.initiate({_id: "ft",members: [{ _id: 0 , host: "host-10-10-108-33:27017" }]})
+{
+	"ok" : 0,
+	"errmsg" : "not authorized on admin to execute command { replSetInitiate: { _id: \"ft0\", members: [ { _id: 0.0, host: \"host-10-10-108-33:27017\" } ] } }",
+	"code" : 13,
+	"codeName" : "Unauthorized"
+}
+
+接着添加另1个成员：
+rs0:PRIMARY> rs.add("host-10-10-108-34:27017")
+
+
+
+
+rs.initiate({ _id:"ft", members:[ {_id:0,host:'10.10.108.33:27017',priority:2}, {_id:1,host:'10.10.108.34:27017',priority:1},{_id:2,host:'10.10.108.36:27017',arbiterOnly:true}] });
+

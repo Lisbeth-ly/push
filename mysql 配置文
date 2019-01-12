@@ -1,0 +1,132 @@
+[client]
+port            = 3306
+socket          = /data/mysql/tmp/mysql.sock
+ 
+[mysqld]
+#character-set-client=utf8
+character-set-server=utf8mb4
+ 
+lower_case_table_names=0
+ 
+socket=/data/mysql/tmp/mysql.sock
+pid-file=/data/mysql/tmp/mysqld.pid
+datadir=/data/mysql/data
+ 
+user=mysql
+port=3306
+ 
+skip_name_resolve=1
+innodb_force_recovery = 0
+innodb_fast_shutdown = 1
+ 
+ 
+# --------------- #
+# Slowlog Options #
+# --------------- #
+slow-query-log=1
+slow-query-log-file=/data/mysql/logs/slow.log
+long_query_time=1
+log-queries-not-using-indexes  = 0
+ 
+ 
+ 
+#---------------#
+#query cache    #
+#---------------#
+query-cache-type = 0 #关闭query cache OLTP系统建议关闭
+query-cache-size = 0
+ 
+ 
+# --------------- #
+# MyISAM Options  #
+# --------------- #
+key_buffer_size=64M    #64M
+table_open_cache=4096        #1024
+table-definition-cache=4096
+sort_buffer_size=6M  #4M
+ 
+# --------------- #
+# InnoDB Options  #
+# --------------- #
+innodb_buffer_pool_size=6G
+innodb_file_per_table
+innodb_lock_wait_timeout=60
+innodb_rollback_on_timeout=1
+innodb_log_file_size=256M
+innodb_log_buffer_size=32M
+ 
+innodb_flush_log_at_trx_commit=1
+sync-binlog=1
+innodb_support_xa=1
+ 
+innodb_thread_concurrency=0
+innodb_flush_method=O_DIRECT
+ 
+innodb-log-files-in-group = 2
+innodb_log_group_home_dir = /data/mysql/data
+ 
+innodb_flush_neighbors = 0 #SSD应该关闭
+innodb_io_capacity=2000
+innodb_io_capacity_max=6000
+innodb_lru_scan_depth=2000
+ 
+innodb_purge_threads=4
+innodb_buffer_pool_instances=2 #innodb buffer pool的个数，多个可以提高性能(不确定)
+innodb_read_io_threads=24  #读线程的个数
+innodb_write_io_threads=24 #12 #写线程的个数
+ 
+# ------------------ #
+# performance tuning #
+# ------------------ #
+max_connections=16384
+max_connect_errors=1844674407370954751
+connect_timeout=20
+read_rnd_buffer_size=16M
+back_log=512  #384
+max_allowed_packet=64M  #32M
+thread_stack=256K
+read_buffer_size=8M
+join_buffer_size=16M
+myisam_sort_buffer_size=128M
+tmp_table_size=512M #512M
+max_heap_table_size=1024M #512M
+#thread_concurrency=64 #默认即可,不用设置
+#thread_handling = pool-of-threads
+#thread_pool_oversubscribe = 10
+ 
+open_files_limit = 65535
+innodb_open_files=65535
+ 
+ 
+wait_timeout=43200
+interactive_timeout=43200
+ 
+# -------------- #
+# binlog options #
+# -------------- #
+server_id=563306
+binlog_cache_size = 16M
+max_binlog_cache_size = 512M
+max_binlog_size = 512M
+log-bin = binlog               #default mysql-data-path        as same as 'log_bin = binlog'
+binlog_format = MIXED
+expire_logs_days = 7
+log-slave-updates=1
+ 
+relay-log = /data/mysql/logs/relay_bin.log
+relay-log-info-file = /data/mysql/logs/relay_bin.info
+relay-log-index = /data/mysql/logs/relay_bin.index
+master-info-file = /data/mysql/logs/master.info
+#replicate-ignore-db = mysql,information_schema,performance_schema,test
+#replicate_wild_ignore_table=mysql.%,information_schema.%,performance_schema.%,test.%
+ 
+sysdate-is-now
+ 
+[mysqld_safe]
+log-error=/data/mysql/logs/mysql_error.log
+ 
+[xtrabackup]
+default-character-set = utf8
+ 
+[perl]
+default-character-set = utf8

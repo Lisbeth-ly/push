@@ -1,0 +1,33 @@
+
+
+
+mysql:
+root/Tm7WVdKWWmxbgsN9U9HaTQ
+rep/FkyJgpO2j9z0rrlpHlG
+
+mysql root密码：
+grant all privileges on *.* to root@'%' identified by 'Tm7WVdKWWmxbgsN9U9HaTQ';
+
+grant replication slave,replication client on *.* to rep@'10.10.108.%' identified by 'FkyJgpO2j9z0rrlpHlG';
+flush privileges;
+
+
+mysql> show master status;
++-----------------+----------+--------------+------------------+------------------------------------------+
+| File            | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set                        |
++-----------------+----------+--------------+------------------+------------------------------------------+
+| mybinlog.000003 |     1090 |              |                  | 8eb5ad56-9c98-11e8-81cc-fa163e8004da:1-8 |
++-----------------+----------+--------------+------------------+------------------------------------------+
+1 row in set (0.00 sec)
+
+change master to master_host='10.10.108.33',
+master_user='rep',master_password='FkyJgpO2j9z0rrlpHlG',master_log_file='mybinlog.000003',master_log_pos=1090;
+start slave;
+
+
+
+grant replication slave,replication client on *.* to rep@'10.10.108.%' identified by '****';
+
+
+
+AItool-k8s High Priority Alert

@@ -1,0 +1,282 @@
+cd /var/lib/libvirt/images/
+
+196  ll /var/lib/libvirt/images/
+  197  cd /var/lib/libvirt/images/
+  198  ll
+  199  cp yz-gpu-base-k8s-400g.img yz-gpu-k8s001.hogpu.cc.img
+  200  cp yz-gpu-base-k8s-400g.img yz-gpu-k8s002.hogpu.cc.img
+  201  vim yz-gpu-k8s001.hogpu.cc.xml
+  202  vi yz-gpu-k8s001.hogpu.cc.xml
+  203  virsh define yz-gpu-k8s001.hogpu.cc.xml
+  204  virsh edit yz-gpu-k8s001.hogpu.cc
+  205  virsh list --all
+  206  virsh list
+  207  free -m
+  208  free -f
+  209  free -g
+  210  virsh list
+  211  free -g
+  212  virsh list
+  213  free -g
+  214  free -m
+  215  free -g
+  216  free -m
+  217  htop
+  218  yum install perf iperf htop -y
+  219  virsh list
+  220  ll
+  221  virsh list
+  222  free -g
+  223  free -
+  224  free -m
+  225  virsh list
+  226  free -m
+  227  virsh list
+  228  free -m
+  229  virsh list
+  230  free -m
+  231  virsh list
+  232  free -m
+  233  virsh list
+  234  free -m
+  235  free -g
+  236  free -m
+  237  free -g
+  238  free -m
+  239  tailf /var/log/messages
+  240  w
+  241  free
+  242  free -m
+  243  virsh list
+  244  free -g
+  245  free -m
+  246  virsh list
+  247  free -m
+  248  ip
+  249  ip a
+  250  virsh list
+  251  ls
+  252  rpm -ivh zabbix-agent-3.2.6-1.el7.x86_64.rpm
+  253  vim /etc/zabbix/zabbix_agentd.conf
+  254  vi /etc/zabbix/zabbix_agentd.conf
+  255  getenforce
+  256  setenforce 0
+  257  systemctl status zabbix-agent
+  258  systemctl status firewalld
+  259  systemctl stop firewalld
+  260  systemctl disabled firewalld
+  261  systemctl disable firewalld
+  262  vim /etc/sysconfig/selinux
+  263  vi /etc/sysconfig/selinux
+  264  systemctl start zabbix-agent
+  265  systemctl enable zabbix-agent
+  266  systemctl status zabbix-agent
+  267  ls
+  268  rm -f zabbix-agent-3.2.6-1.el7.x86_64.rpm
+  269  ls
+  270  exit
+  271  service libvirtd status
+  272  virsh list
+  273  virsh destroy 2
+  274  virsh list
+  275  free -g
+  276  service libvirtd restart
+  277  virsh list
+  278  time virsh start yz-gpu-k8s002.hogpu.cc
+  279  w
+  280  virsh list
+  281  virsh list --all
+  282  service libvirtd restart
+  283  free -g
+  284  virsh start yz-gpu-k8s001.hogpu.cc
+  285  free -g
+  286  virsh start yz-gpu-k8s002.hogpu.cc
+  287  free -g
+  288  virsh list --all
+
+
+
+  312  ps -ef | grep gmond
+  313  ps -ef | grep ambari-agent
+  314  ps -ef | grep trqauthd
+  315  exit
+  316  virsh list
+  317  tailf /var/log/messages
+  318  htop
+  319  htop  -u qemu
+  320  perf qemu
+  321  perf kvm
+  322  perf
+  323  perf kvm
+  324  perf kvm --guest
+  325  perf kvm -v
+  326  perf kvm
+  327  perf top
+  328  perf kvm
+  329  perf kvm yz-gpu-k8s001.hogpu.cc
+  330  perf kvm -v
+  331  perf kvm --guest
+  332  perf kvm --guest  yz-gpu-k8s001.hogpu.cc
+  333  perf kvm --guest  yz-gpu-k8s001.hogpu.ccyz-gpu-k8s001.hogpu.cc
+  334  perf kvm --guest  yz-gpu-k8s001.hogpu.cc
+  335  vim .ssh/authorized_keys
+  336  w
+  337  virsh list
+  338  virsh dumpxml 1 --inactive
+  339  ip a
+  340  exit
+  341  w
+  342  free -m
+  343  virsh list
+  344  w
+  345  tailf /var/log/messages
+  346  tailf /var/log/libvirt/qemu/yz-gpu-k8s002.hogpu.cc.log
+  347  w
+  348  free -g
+  349  htop
+  350  free -g
+  351  free -m
+  352  echo 3 > /proc/sys/vm/drop_caches
+  353  w
+  354  free -m
+  355  echo 1 > /proc/sys/vm/drop_caches
+  356  echo 2 > /proc/sys/vm/drop_caches
+  357  free -m
+  358  virsh nodeinfo
+  359  virsh capabilities
+  360  virsh capabilities |more
+  361  virsh list
+  362  service libvirtd restart
+ 363  virsh list
+  364  virsh list --all
+  365  virsh edit yz-gpu-k8s001.hogpu.cc
+  366  lscpu
+  367  virsh list
+  368  virsh list --all
+  369  virsh edit yz-gpu-k8s001.hogpu.cc
+  370  virsh start yz-gpu-k8s001.hogpu.cc
+  371  virsh vcpupin yz-gpu-k8s001.hogpu.cc
+  372  htop
+  373  virsh help|grep numa
+  374  virsh numatune yz-gpu-k8s099.hogpu.cc
+  375  virsh numatune yz-gpu-k8s001.hogpu.cc --help
+  376  virsh numatune yz-gpu-k8s001.hogpu.cc --nodeset 0
+  377  virsh numatune yz-gpu-k8s001.hogpu.cc
+  378  virsh destroy yz-gpu-k8s001.hogpu.cc
+  379  virsh numatune yz-gpu-k8s002.hogpu.cc --nodeset 1
+  380  service libvirtd restart
+  381  virsh start yz-gpu-k8s001.hogpu.cc
+  382  htop
+  383  htop -u qemu
+  384  virsh numatune yz-gpu-k8s002.hogpu.cc
+  385  virsh start yz-gpu-k8s001.hogpu.cc
+  386  virsh list
+  387  virsh start yz-gpu-k8s002.hogpu.cc
+  388  virsh list
+  389  ps -ef|grep w
+  390  w
+  391  htop
+  392  ps -ef|grep qemu
+   396  virsh list
+  397  virsh list --all
+  398  lscpu
+  399  virsh edit yz-gpu-k8s001.hogpu.cc
+  400  virsh start yz-gpu-k8s001.hogpu.cc
+  401  virsh help|grep num
+  402  virsh vcpupin yz-gpu-k8s001.hogpu.cc
+  403  htop
+  404  virsh edit yz-gpu-k8s001.hogpu.cc
+  405  virsh edit yz-gpu-k8s002.hogpu.cc
+  406  virsh start yz-gpu-k8s002.hogpu.cc
+  407  virsh list
+
+
+[root@yz-gpu-k8s002 ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0
+TYPE=Ethernet
+BOOTPROTO=static
+DEFROUTE=yes
+PEERDNS=yes
+PEERROUTES=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_PEERDNS=yes
+IPV6_PEERROUTES=yes
+IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+NAME=eth0
+DEVICE=eth0
+ONBOOT=yes
+IPADDR=10.10.10.161
+PREFIX=24
+GATEWAY=10.10.10.1
+DNS1=10.10.10.10
+DNS2=10.9.1.2
+DOMAIN=hogpu.cc
+NM_CONTROLLER=no
+
+
+
+
+彻底删除虚拟机
+
+1, 删除虚拟机   virsh destroy +域名
+
+2，解除标记     virsh undefine +域名
+
+3，删除虚拟机文件  
+
+virsh dumpxml 3 > /tmp/abc.xml
+
+输出配置文件
+virsh dumpxml 1
+查看gpu卡的对应情况：virsh nodedev-list --tree
+查看那块卡被占用及具体信息：
+#virsh nodedev-dumpxml pci_0000_02_00_0
+<device>
+  <name>pci_0000_02_00_0</name>
+  <path>/sys/devices/pci0000:00/0000:00:02.0/0000:02:00.0</path>
+  <parent>pci_0000_00_02_0</parent>
+  <driver>
+    <name>vfio-pci</name>
+  </driver>
+  <capability type='pci'>
+    <domain>0</domain>
+    <bus>2</bus>
+    <slot>0</slot>
+    <function>0</function>
+    <product id='0x1b00'>GP102 [TITAN X]</product>
+    <vendor id='0x10de'>NVIDIA Corporation</vendor>
+    <iommuGroup number='45'>
+      <address domain='0x0000' bus='0x02' slot='0x00' function='0x0'/>
+      <address domain='0x0000' bus='0x02' slot='0x00' function='0x1'/>
+    </iommuGroup>
+    <numa node='0'/>
+    <pci-express>
+      <link validity='cap' port='0' speed='8' width='16'/>
+      <link validity='sta' speed='2.5' width='16'/>
+    </pci-express>
+  </capability>
+</device>
+
+
+查看pci列表
+virsh nodedev-list 
+查看物理机有几块卡：lspci |grep NVIDIA
+
+
+ #virsh define /tmp/abc.xml
+ #virsh start xxx
+ #virsh console
+
+
+route add -net 10.10.10.0 netmack 255.255.255.0 gw 10.10.10.1
+
+
+$1$p0zUvv.w$LKHJcT7rDb75ao5ak9jMm/
+virt-edit -d 10 /etc/shadow
+
+
+
+$1$MQ0i26F.$61CQ/nLR4FZ..2dP.I5X7.

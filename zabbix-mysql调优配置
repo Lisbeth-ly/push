@@ -1,0 +1,73 @@
+zabbix-mysql调优配置
+
+数据库调优
+[client]
+#password   = your_password
+port        = 3306
+socket      = /tmp/mysql.sock
+
+[mysqld]
+skip-new 
+port        = 3306
+socket      = /tmp/mysql.sock
+datadir = /data/mysql
+#replicate-ignore-table = zabbix.history
+#replicate-ignore-table = zabbix.history_log
+##replicate-ignore-table = zabbix.history_text
+#replicate-ignore-table = zabbix.history_uint
+#replicate-ignore-table = zabbix.history_str
+relay_log_recovery=1 
+skip-external-locking  
+key_buffer_size = 512M
+max_allowed_packet = 16M
+table_open_cache = 2048
+sort_buffer_size = 8M
+net_buffer_length = 8K
+read_buffer_size = 8M
+read_rnd_buffer_size = 512K
+myisam_sort_buffer_size = 128M
+thread_cache_size = 256
+query_cache_size = 256M
+tmp_table_size = 256M
+slave-skip-errors = 1062,1032
+wait_timeout=120
+interactive_timeout=120 
+
+#skip-networking
+max_connections = 2000
+max_connect_errors = 100
+open_files_limit = 65535
+
+log-bin=mysql-bin
+binlog_format=mixed
+server-id   = 1
+expire_logs_days = 10
+auto_increment_offset=2
+auto_increment_increment=2
+
+default_storage_engine = InnoDB
+innodb_data_home_dir = /data/mysql
+innodb_data_file_path = ibdata1:10M:autoextend
+innodb_log_group_home_dir = /data/mysql
+innodb_buffer_pool_size = 2048M
+innodb_additional_mem_pool_size = 2M
+innodb_log_file_size = 512M
+innodb_log_buffer_size = 8M
+innodb_flush_log_at_trx_commit = 1
+innodb_lock_wait_timeout = 50
+
+[mysqldump]
+quick
+max_allowed_packet = 16M
+
+[mysql]
+no-auto-rehash
+
+[myisamchk]
+key_buffer_size = 512M
+sort_buffer_size = 8M
+read_buffer = 2M
+write_buffer = 2M
+
+[mysqlhotcopy]
+interactive-timeout

@@ -1,0 +1,115 @@
+
+
+
+常用操作：
+
+desc history ;
+查history表中第一条数据的tiemid值（asc正序）
+select * from history order by  itemid asc  limit 1;
+倒序排（desc函数）
+select * from history_uint order by clock desc limit 1;
+查history表中第一条数据的时间戳clock值
+select * from history order by clock asc limit 1;
+select * from expressions where expressionid='67569';
+SELECT TABLE_NAME AS "Table", round(((data_length + index_length) / 1024 /1024), 2) AS Size_in_MB FROM information_schema.TABLES  WHERE table_schema = 'zabbix' ORDER BY Size_in_MB DESC LIMIT 10;
+
+1 统计每个表所占用的空间
+空间占用前十：
+SELECT TABLE_NAME AS "Table", round(((data_length + index_length) / 1024 /1024), 2) AS Size_in_MB FROM information_schema.TABLES  WHERE table_schema = 'zabbix' ORDER BY Size_in_MB DESC LIMIT 10;
+所有的表空间占用情况：
+SELECT table_name AS "Tables",round(((data_length + index_length) / 1024 / 1024), 2) "Size in MB" FROM information_schema.TABLES  WHERE table_schema = 'zabbix' ORDER BY (data_length + index_length) DESC;
+2 清理zabbix90天以前的历史数据：
+#!/bin/bash
+User="root"
+Passwd="2wsx%RDX"
+Date=`date -d $(date -d "-90 day" +%Y%m%d) +%s` #取90天之前的时间戳
+$(which mysql) -u${User} -p${Passwd} -e "
+use zabbix;
+DELETE FROM history WHERE 'clock' < $Date;
+optimize table history;
+DELETE FROM history_str WHERE 'clock' < $Date;
+optimize table history_str;
+DELETE FROM history_uint WHERE 'clock' < $Date;
+optimize table history_uint;
+DELETE FROM history_text WHERE 'clock' < $Date;
+optimize table history_text;
+DELETE FROM  trends WHERE 'clock' < $Date;
+optimize table  trends;
+DELETE FROM trends_uint WHERE 'clock' < $Date;
+optimize table trends_uint;
+DELETE FROM events WHERE 'clock' < $Date;
+optimize table events;
+"
+3、添加到系统计划任务：
+
+#remove the zabbix mysql data before 7 day's ago
+0 3 * * 0 /usr/local/script/clearzabbix.sh > /usr/local/script/clearzabbix.log
+ 
+
+另：可以使用truncate命令直接清空数据库：
+
+如果想要删除表的所有数据，truncate语句要比 delete 语句快。
+
+因为 truncate 删除了表，然后根据表结构重新建立它，而 delete 删除的是记录，并没有尝试去修改表。
+
+不过truncate命令虽然快，却不像delete命令那样对事务处理是安全的。
+
+因此，如果我们想要执行truncate删除的表正在进行事务处理，这个命令就会产生退出并产生错误信息。 
+
+
+SELECT TABLE_NAME AS "Table", round(((data_length + index_length) / 1024 /1024), 2) AS Size_in_MB FROM information_schema.TABLES  WHERE table_schema = 'zabbix' ORDER BY Size_in_MB DESC LIMIT 10;
++--------------------+------------+
+| Table              | Size_in_MB |
++--------------------+------------+
+| history_uint       |   60919.11 |
+| history            |   38291.17 |
+| trends_uint        |    3740.20 |
+| trends             |    2195.08 |
+| history_str        |     613.42 |
+| events             |     495.58 |
+| alerts             |     194.41 |
+| event_recovery     |      63.72 |
+| items              |      53.20 |
+| items_applications |      14.48 |
++--------------------+------------+
+10 rows in set (2.73 sec)
+
+
+2018-11-21-17:30执行：
+提前先将server停掉或者屏蔽报警（以免引起恐慌）
+全量备份：
+# nohup innobackupex --user=root --password=2wsx%RDX --host=127.0.0.1 --use-memory=5G /zabbix-data/ &
+删表：
+MariaDB [zabbix]> truncate table history_uint;
+MariaDB [zabbix]> truncate table history;
+释放表空间：
+MariaDB [zabbix]> optimize table history_uint;
+MariaDB [zabbix]> optimize table history;
+查看表中数据条数：
+MariaDB [zabbix]> select count(1) from history_uint;
+MariaDB [zabbix]> select count(1) from history;
+排序：
+MariaDB [zabbix]> SELECT table_name AS "Tables",round(((data_length + index_length) / 1024 / 1024), 2) "Size in MB" FROM information_schema.TABLES  WHERE table_schema = 'zabbix' ORDER BY (data_length + index_length) DESC;
+完成！
+truncate操作是删除表中所有数据，同时，web界面上也看不到以前的数据了，一定要做好备份工作，如果有人要查数据，创建一个测试库，将原有数据导入供其查询。
+
+
+
+select table_schema, concat(truncate(sum(data_length)/1024/1024,2),' mb') as data_size,
+concat(truncate(sum(index_length)/1024/1024,2),'mb') as index_size
+from information_schema.tables
+group by table_schema
+order by data_length desc;
+
+
+nohup mysql -uroot -p'2wsx%RDX' --max-allowed-packet=200000000 --net-buffer-length=200000  zabbix < /zabbix-data/all_mysql.sql &
+查看表中第一条数据信息：
+MariaDB [zabbix]> select * from history limit 1;
++--------+------------+--------+-----------+
+| itemid | clock      | value  | ns        |
++--------+------------+--------+-----------+
+| 156921 | 1542792611 | 0.0000 | 847950520 |
++--------+------------+--------+-----------+
+1 row in set (0.00 sec)
+查看表的第一条数据（升序）
+select * from history order by clock asc limit 1;

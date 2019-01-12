@@ -121,4 +121,3 @@ echo -e -n "后续的操作:1、通过http://ip/zabbix 访问你的zabbix Web页
 yum update -y
 
 
-
